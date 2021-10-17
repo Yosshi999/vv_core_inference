@@ -19,24 +19,25 @@ def run(
     use_gpu: bool,
     texts: List[str],
     speaker_ids: List[int],
+    convert_onnx=False,
 ):
     device = "cuda" if use_gpu else "cpu"
 
     # yukarin_s
     yukarin_s_forwarder = make_yukarin_s_forwarder(
-        yukarin_s_model_dir=yukarin_s_model_dir, device=device
+        yukarin_s_model_dir=yukarin_s_model_dir, device=device, convert=convert_onnx
     )
 
     # yukarin_sa
     yukarin_sa_forwarder = make_yukarin_sa_forwarder(
-        yukarin_sa_model_dir=yukarin_sa_model_dir, device=device
+        yukarin_sa_model_dir=yukarin_sa_model_dir, device=device, convert=convert_onnx
     )
 
     # decoder
     decode_forwarder = make_decode_forwarder(
         yukarin_sosoa_model_dir=yukarin_sosoa_model_dir,
         hifigan_model_dir=hifigan_model_dir,
-        device=device,
+        device=device, convert=convert_onnx
     )
 
     # Forwarder。このForwarderクラスの中を書き換えずに
@@ -69,4 +70,5 @@ if __name__ == "__main__":
     parser.add_argument("--use_gpu", action="store_true")
     parser.add_argument("--texts", nargs="+", default=["こんにちは、どうでしょう"])
     parser.add_argument("--speaker_ids", nargs="+", type=int, default=[5, 9])
+    parser.add_argument("--convert_onnx", action="store_true")
     run(**vars(parser.parse_args()))
