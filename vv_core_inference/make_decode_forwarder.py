@@ -8,7 +8,7 @@ from hifi_gan.models import Generator as HifiGanPredictor
 from torch import nn
 
 from vv_core_inference.make_yukarin_sosoa_forwarder import make_yukarin_sosoa_wrapper
-from vv_core_inference.utility import to_tensor, OPSET
+from vv_core_inference.utility import to_tensor, OPSET, aggregate, decompose
 
 
 class AttrDict(dict):
@@ -67,6 +67,19 @@ def make_decode_forwarder(
     hifi_gan_predictor.eval()
     hifi_gan_predictor.remove_weight_norm()
     print("hifi-gan loaded!")
+    if True:
+        names = aggregate(hifi_gan_predictor)
+        decompose(hifi_gan_predictor, names[:-1])
+        torch.save(hifi_gan_predictor.state_dict(), hifigan_model_dir.joinpath("model-cp.pth"))
+        print("CP-decomposed hifi-gan saved!")
+        hifi_gan_predictor.eval()
+    else:
+        names = aggregate(hifi_gan_predictor)
+        decompose(hifi_gan_predictor, names[:-1], decompose_weights=False)
+        hifi_gan_predictor.load_state_dict(torch.load(hifigan_model_dir.joinpath("model-cp.pth")))
+        hifi_gan_predictor.eval()
+
+
 
     decode_forwarder = WrapperDecodeForwarder(
         yukarin_sosoa_forwarder=yukarin_sosoa_wrapper,
