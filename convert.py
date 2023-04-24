@@ -163,7 +163,7 @@ def convert_contour(model_dir: Path, device: str, offset: int, working_dir: Path
             "phoneme",
             "speaker_id"
         ],
-        output_names=["f0", "voiced"],
+        output_names=["f0_contour", "voiced"],
         dynamic_axes={
             "f0": {0: "length"},
             "phoneme": {0: "length"},

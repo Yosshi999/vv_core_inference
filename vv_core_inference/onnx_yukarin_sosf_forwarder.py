@@ -27,7 +27,7 @@ def make_yukarin_sosf_forwarder(yukarin_sosf_model_dir: Path, device, convert=Fa
             speaker_id = np.asarray(speaker_id).astype(np.int64)
 
         f0, voiced = session.run(
-            ["f0", "voiced"],
+            ["f0_contour", "voiced"],
             {
                 "length": length,
                 "f0": f0,
