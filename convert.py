@@ -144,7 +144,6 @@ def convert_contour(model_dir: Path, device: str, offset: int, working_dir: Path
     logger.info("spectrogram model is loaded!")
     logger.info("speaker size: %d" % size)
     args = (
-        to_tensor(sample_input["length"], device=device).long(),
         to_tensor(sample_input["f0"], device=device),
         to_tensor(sample_input["phoneme"], device=device),
         to_tensor(sample_input["speaker_id"], device=device).reshape((1,)).long()
@@ -158,7 +157,6 @@ def convert_contour(model_dir: Path, device: str, offset: int, working_dir: Path
         opset_version=OPSET,
         do_constant_folding=True,
         input_names=[
-            "length",
             "f0",
             "phoneme",
             "speaker_id"

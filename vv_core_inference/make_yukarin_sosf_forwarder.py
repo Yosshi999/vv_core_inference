@@ -29,7 +29,6 @@ class WrapperYukarinSosf(nn.Module):
     @torch.no_grad()
     def forward(
         self,
-        length: Tensor,
         f0: Tensor,
         phoneme: Tensor,
         speaker_id: Tensor,
@@ -83,17 +82,15 @@ def make_yukarin_sosf_forwarder(yukarin_sosf_model_dir: Path, device):
     yukarin_sosf_forwarder = make_yukarin_sosf_wrapper(yukarin_sosf_model_dir, device)
 
     def _dispatcher(
-        length: int,
         f0: numpy.ndarray,
         phoneme: numpy.ndarray,
         speaker_id: Optional[numpy.ndarray] = None,
     ):
-        length = to_tensor(length, device=device)
         f0 = to_tensor(f0, device=device)
         phoneme = to_tensor(phoneme, device=device)
         if speaker_id is not None:
             speaker_id = to_tensor(speaker_id, device=device)
-        f0, voiced = yukarin_sosf_forwarder(length, f0, phoneme, speaker_id)
+        f0, voiced = yukarin_sosf_forwarder(f0, phoneme, speaker_id)
         return f0.cpu().numpy(), voiced.cpu().numpy()
 
     return _dispatcher

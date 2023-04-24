@@ -174,7 +174,6 @@ class Forwarder:
         # forward yukarin sosf
         if self.yukarin_sosf_forwarder is not None:
             yukarin_sosf_input = {
-                "length": phoneme.shape[0],
                 "f0": f0[:, numpy.newaxis],
                 "phoneme": phoneme,
                 "speaker_id": numpy.array(speaker_id, dtype=numpy.int64).reshape(-1),
